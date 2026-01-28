@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnimeVerse AI | Владелец: [Ваше Имя]</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;600;700;800;900&family=Oxanium:wght@400;700&family=Audiowide&family=Kanit:wght@700;800&family=Orbitron:wght@500&display=swap" rel="stylesheet">
+    <style>
+        /* === ГЛОБАЛЬНЫЕ СТИЛИ === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Цвета вселенных */
+            --naruto: #FF6B00;
+            --mha: #1E88E5;
+            --aot: #D32F2F;
+            --demonslayer: #7B1FA2;
+            --jjk: #E91E63;
+            --onepiece: #FF9800;
+            --bleach: #FFB300;
+            --hunterxhunter: #0097A7;
+            --chainsawman: #FF1744;
+            --spyxfamily: #4CAF50;
+            --drstone: #795548;
+            --onepunchman: #9C27B0;
+            --dragonball: #FFC107;
+            --jojo: #FF5722;
+            
+            /* Тёмная тема */
+            --bg-primary: #0A0A1A;
+            --bg-secondary: #121230;
+            --bg-card: rgba(25, 25, 45, 0.95);
+            --text-primary: #FFFFFF;
+            --text-secondary: #B0B0D0;
+            --accent: #6C5CE7;
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --danger: #F44336;
+            --owner-color: #FFD700;
+            
+            /* Тени */
+            --shadow-lg: 0 25px 50px rgba(0, 0, 0, 0.5);
+            --shadow-glow: 0 0 40px;
+        }
+
+        body {
+            font-family: 'Rubik', sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #1a1a3a 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* === ВЛАДЕЛЕЦ БАДЖ === */
+        .owner-badge {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            background: linear-gradient(90deg, var(--owner-color), #FFA500);
+            color: #1a1a2e;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-weight: 800;
+            z-index: 1000;
+            box-shadow: 0 10px 35px rgba(255, 215, 0, 0.4);
+            border: 3px solid gold;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .owner-badge i {
+            font-size: 1.3rem;
+        }
+
+        /* === ПАНЕЛЬ ВЛАДЕЛЬЦА === */
+        .owner-panel {
+            position: fixed;
+            top: 90px;
+            right: 25px;
+            background: rgba(20, 20, 40, 0.98);
+            border-radius: 20px;
+            padding: 25px;
+            width: 350px;
+            z-index: 999;
+            border: 2px solid var(--owner-color);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(20px);
+            display: none;
+        }
+
+        .owner-panel.active {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .owner-panel h3 {
+            color: var(--owner-color);
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            border-bottom: 2px solid var(--owner-color);
+            padding-bottom: 10px;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--owner-color);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--owner-color);
+        }
+
+        .admin-controls {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .admin-btn {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, var(--owner-color), #FFA500);
+            border: none;
+            border-radius: 10px;
+            color: #1a1a2e;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .admin-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);
+        }
+
+        .admin-btn.secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        /* === ОСНОВНЫЕ СТИЛИ (сохраняем из предыдущей версии) === */
+        .universe-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            opacity: 0.15;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            transition: all 1s ease;
+            filter: blur(2px);
+        }
+
+        .particle-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(108, 92, 231, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 107, 0, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(30, 136, 229, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .main-container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+        }
+
+        .back-button {
+            position: fixed;
+            top: 25px;
+            left: 25px;
+            width: 55px;
+            height: 55px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--theme-color, var(--accent));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.4rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .back-button:hover {
+            background: var(--theme-color, var(--accent));
+            transform: translateX(-5px) scale(1.1);
+            box-shadow: 0 0 20px var(--theme-color, var(--accent));
+        }
+
+        .main-header {
+            text-align: center;
+            padding: 60px 20px 40px;
+            position: relative;
+        }
+
+        .main-logo {
+            font-family: 'Audiowide', cursive;
+            font-size: 5rem;
+            background: linear-gradient(90deg, #FF416C, #FF4B2B, #FF8F00, #1E88E5, #6C5CE7);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            animation: gradientShift 8s ease infinite;
+            text-shadow: 0 0 50px rgba(255, 65, 108, 0.3);
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .tagline {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            max-width: 900px;
+            margin: 0 auto 30px;
+            line-height: 1.7;
+            font-weight: 300;
+        }
+
+        /* === СЕТКА ВСЕЛЕННЫХ === */
+        .universes-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 35px;
+            margin-top: 30px;
+        }
+
+        .universe-tile {
+            background: linear-gradient(145deg, var(--bg-card), rgba(30, 30, 50, 0.9));
+            border-radius: 25px;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 3px solid transparent;
+            cursor: pointer;
+            position: relative;
+            backdrop-filter: blur(10px);
+            height: 320px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .universe-tile::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--tile-color), var(--tile-color-light));
+            z-index: 2;
+        }
+
+        .universe-tile:hover {
+            transform: translateY(-20px) scale(1.03);
+            border-color: var(--tile-color);
+            box-shadow: 
+                var(--shadow-lg),
+                0 0 40px color-mix(in srgb, var(--tile-color) 30%, transparent);
+        }
+
+        .tile-header {
+            padding: 30px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .universe-icon {
+            font-size: 3.8rem;
+            margin-bottom: 20px;
+            color: var(--tile-color);
+            text-shadow: 0 0 25px var(--tile-color);
+        }
+
+        .universe-name {
+            font-family: 'Kanit', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, var(--tile-color), var(--tile-color-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* === ЧАТ ИНТЕРФЕЙС === */
+        .chat-interface {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: linear-gradient(145deg, rgba(25, 25, 45, 0.98), rgba(15, 15, 35, 0.98));
+            border-radius: 30px;
+            overflow: hidden;
+            border: 3px solid var(--theme-color);
+            box-shadow: 
+                var(--shadow-lg),
+                0 0 50px color-mix(in srgb, var(--theme-color) 25%, transparent);
+            backdrop-filter: blur(20px);
+            height: 85vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header-bar {
+            background: linear-gradient(90deg, var(--theme-color), color-mix(in srgb, var(--theme-color) 70%, white));
+            padding: 25px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .character-display {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .character-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--theme-color), white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            border: 4px solid white;
+            box-shadow: 0 0 30px var(--theme-color);
+        }
+
+        .character-info h2 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+            background: rgba(10, 10, 25, 0.7);
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .message {
+            display: flex;
+            gap: 20px;
+            animation: messageAppear 0.5s ease forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        @keyframes messageAppear {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .message.user .message-avatar {
+            background: linear-gradient(135deg, #FF4081, #FF6B00);
+        }
+
+        .message.ai .message-avatar {
+            background: linear-gradient(135deg, var(--theme-color), color-mix(in srgb, var(--theme-color) 70%, white));
+        }
+
+        .message-content {
+            max-width: 75%;
+            padding: 25px;
+            border-radius: 25px;
+            line-height: 1.7;
+            word-wrap: break-word;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .message.ai .message-content {
+            background: linear-gradient(135deg, rgba(40, 40, 65, 0.95), rgba(30, 30, 55, 0.95));
+            border: 1px solid var(--theme-color);
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(135deg, #FF4081, #FF6B00);
+        }
+
+        .message-sender {
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .typing-indicator {
+            display: none;
+            padding: 25px 30px;
+            align-items: center;
+            gap: 20px;
+            color: var(--theme-color);
+            font-style: italic;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            margin: 0 30px 20px;
+        }
+
+        .typing-indicator.active {
+            display: flex;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .typing-dot {
+            width: 12px;
+            height: 12px;
+            background: var(--theme-color);
+            border-radius: 50%;
+            animation: typingBounce 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes typingBounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        .chat-input-area {
+            padding: 30px;
+            background: rgba(30, 30, 50, 0.9);
+            border-top: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: 25px;
+            align-items: flex-end;
+        }
+
+        #userInput {
+            flex: 1;
+            padding: 22px 28px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid var(--theme-color);
+            border-radius: 25px;
+            color: white;
+            font-size: 1.15rem;
+            min-height: 90px;
+            max-height: 200px;
+            resize: vertical;
+            outline: none;
+            transition: all 0.3s ease;
+            font-family: 'Rubik', sans-serif;
+            line-height: 1.6;
+        }
+
+        #userInput:focus {
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 40px color-mix(in srgb, var(--theme-color) 30%, transparent);
+        }
+
+        #sendButton {
+            background: linear-gradient(135deg, var(--theme-color), color-mix(in srgb, var(--theme-color) 70%, white));
+            color: white;
+            border: none;
+            padding: 0 45px;
+            border-radius: 25px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s ease;
+            min-width: 200px;
+            height: 90px;
+            justify-content: center;
+        }
+
+        #sendButton:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        }
+
+        #sendButton:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* === АДАПТИВНОСТЬ === */
+        @media (max-width: 1400px) {
+            .universes-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .main-logo {
+                font-size: 4rem;
+            }
+            
+            .owner-badge {
+                top: 20px;
+                right: 20px;
+                padding: 12px 20px;
+                font-size: 0.9rem;
+            }
+            
+            .owner-panel {
+                width: 300px;
+                top: 80px;
+                right: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-logo {
+                font-size: 3rem;
+            }
+            
+            .universes-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .owner-badge span {
+                display: none;
+            }
+            
+            .owner-badge {
+                padding: 15px;
+                width: 55px;
+                height: 55px;
+                border-radius: 50%;
+                justify-content: center;
+            }
+            
+            .owner-panel {
+                width: calc(100vw - 40px);
+                right: 20px;
+                left: 20px;
+            }
+            
+            .input-wrapper {
+                flex-direction: column;
+            }
+            
+            #sendButton {
+                width: 100%;
+                height: 70px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Фоновые элементы -->
+    <div class="universe-background" id="universeBackground"></div>
+    <div class="particle-overlay"></div>
+    
+    <!-- Бейдж владельца -->
+    <div class="owner-badge" id="ownerBadge" onclick="toggleOwnerPanel()">
+        <i class="fas fa-crown"></i>
+        <span>Владелец: AnimeVerse</span>
+    </div>
+    
+    <!-- Панель владельца -->
+    <div class="owner-panel" id="ownerPanel">
+        <h3><i class="fas fa-chart-line"></i> Панель управления</h3>
+        
+        <div class="stat-item">
+            <div class="stat-label">Всего пользователей</div>
+            <div class="stat-value" id="totalUsers">1</div>
+        </div>
+        
+        <div class="stat-item">
+            <div class="stat-label">Сообщений сегодня</div>
+            <div class="stat-value" id="messagesToday">0</div>
+        </div>
+        
+        <div class="stat-item">
+            <div class="stat-label">Доход (руб)</div>
+            <div class="stat-value" id="revenue">0</div>
+        </div>
+        
+        <div class="stat-item">
+            <div class="stat-label">Активных чатов</div>
+            <div class="stat-value" id="activeChats">0</div>
+        </div>
+        
+        <div class="admin-controls">
+            <button class="admin-btn" onclick="exportData()">
+                <i class="fas fa-download"></i> Экспорт данных
+            </button>
+            <button class="admin-btn" onclick="clearChat()">
+                <i class="fas fa-trash"></i> Очистить чат
+            </button>
+            <button class="admin-btn secondary" onclick="changeAIKey()">
+                <i class="fas fa-key"></i> Сменить API ключ
+            </button>
+            <button class="admin-btn secondary" onclick="viewLogs()">
+                <i class="fas fa-scroll"></i> Просмотреть логи
+            </button>
+        </div>
+    </div>
+    
+    <!-- Кнопка назад -->
+    <div class="back-button" id="backButton" onclick="goBack()" style="display: none;">
+        <i class="fas fa-arrow-left"></i>
+    </div>
+    
+    <div class="main-container">
+        <!-- ГЛАВНАЯ СТРАНИЦА -->
+        <div id="homePage">
+            <header class="main-header">
+                <h1 class="main-logo">ANIMEVERSE AI</h1>
+                <p class="tagline">
+                    Нейросеть нового поколения для погружения в мир аниме. 
+                    Общайтесь с персонажами, влияйте на сюжет, создавайте свои истории.
+                    <br><br>
+                    <span style="color: var(--owner-color);">
+                        <i class="fas fa-shield-alt"></i> Powered by GPT-4 & Custom Anime AI
+                    </span>
+                </p>
+            </header>
+            
+            <h2 style="font-family: 'Kanit', sans-serif; font-size: 2.8rem; text-align: center; margin: 40px 0 50px;">
+                <i class="fas fa-globe-asia"></i> Выберите вселенную для общения
+            </h2>
+            
+            <div class="universes-container" id="universesContainer">
+                <!-- Вселенные будут загружены через JS -->
+            </div>
+        </div>
+        
+        <!-- ИНТЕРФЕЙС ЧАТА -->
+        <div id="chatPage" style="display: none;">
+            <div class="chat-interface">
+                <div class="chat-header-bar">
+                    <div class="character-display">
+                        <div class="character-avatar">
+                            <i class="fas" id="chatCharacterIcon"></i>
+                        </div>
+                        <div class="character-info">
+                            <h2 id="chatCharacterName">...</h2>
+                            <p id="chatScenarioTitle">...</p>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 30px;">
+                        <div style="text-align: center; min-width: 100px;">
+                            <div style="font-size: 2.2rem; font-weight: 800;" id="statMessages">0</div>
+                            <div style="font-size: 0.95rem; color: rgba(255, 255, 255, 0.8);">Сообщений</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="messages-container" id="messagesContainer">
+                    <!-- Сообщения будут добавляться здесь -->
+                </div>
+                
+                <div class="typing-indicator" id="typingIndicator">
+                    <span>Персонаж генерирует ответ...</span>
+                    <div class="typing-dots">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+                
+                <div class="chat-input-area">
+                    <div class="input-wrapper">
+                        <textarea 
+                            id="userInput" 
+                            placeholder="Напишите сообщение персонажу (ИИ создаст уникальный ответ в стиле персонажа)..."
+                            rows="3"
+                            maxlength="2000"
+                        ></textarea>
+                        <button id="sendButton" onclick="sendMessage()">
+                            <i class="fas fa-paper-plane"></i> Отправить
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 🔧 КОНФИГУРАЦИЯ ВЛАДЕЛЬЦА 🔧
+        const OWNER_CONFIG = {
+            name: "AnimeVerse AI", // Ваше имя/название
+            telegram: "@animeverse_owner", // Ваш Telegram для связи
+            email: "owner@animeverse.ai",
+            defaultApiKey: "sk-your-openai-key-here", // 🔴 ЗАМЕНИТЕ НА ВАШ КЛЮЧ
+            proxyServer: "https://your-proxy-server.com/api", // 🔴 ЗАМЕНИТЕ НА АДРЕС ПРОКСИ
+            enableProxy: true // Включить прокси-сервер
+        };
+
+        // 🎭 ВСЕЛЕННЫЕ (упрощенный вариант для демонстрации)
+        const ANIME_UNIVERSES = {
+            naruto: {
+                id: "naruto",
+                name: "NARUTO",
+                description: "Мир ниндзя, чакры и бесконечных битв. Общайтесь с Наруто, Саске, Какаши и другими шиноби.",
+                icon: "fa-leaf",
+                color: "var(--naruto)",
+                colorLight: "#FF8F33",
+                bgImage: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?q=80&w=2070",
+                characters: ["Наруто Узумаки", "Саске Учиха", "Сакура Харуно", "Какаши Хатаке", "Хината Хьюга"]
+            },
+            mha: {
+                id: "mha",
+                name: "MY HERO ACADEMIA",
+                description: "Мир супергероев и причуд. Станьте учеником UA High и общайтесь с Деку, Бакуго и другими.",
+                icon: "fa-bolt",
+                color: "var(--mha)",
+                colorLight: "#4A9EFF",
+                bgImage: "https://images.unsplash.com/photo-1639322537228-f710d846310a?q=80&w=2032",
+                characters: ["Изуку Мидория", "Кацуки Бакуго", "Все Might", "Шота Айзава", "Очако Урарака"]
+            },
+            aot: {
+                id: "aot",
+                name: "ATTACK ON TITAN",
+                description: "Сражение за выживание человечества. Общайтесь с Эреном, Микасой, Леви и другими.",
+                icon: "fa-crown",
+                color: "var(--aot)",
+                colorLight: "#FF5252",
+                bgImage: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?q=80&w=2068",
+                characters: ["Эрен Йегер", "Микаса Аккерман", "Леви Аккерман", "Эрвин Смит", "Ханджи Зое"]
+            }
+            // Добавьте другие вселенные при необходимости
+        };
+
+        // 🧠 РЕАЛЬНЫЙ ИИ ЧЕРЕЗ OPENAI API
+        class RealAnimeAI {
+            constructor() {
+                this.apiKey = localStorage.getItem('animeverse_api_key') || OWNER_CONFIG.defaultApiKey;
+                this.baseURL = OWNER_CONFIG.enableProxy ? OWNER_CONFIG.proxyServer : 'https://api.openai.com/v1';
+                this.conversationHistory = [];
+                this.maxHistory = 20;
+            }
+
+            async generateResponse(userMessage, universe, character) {
+                if (!this.apiKey || this.apiKey === OWNER_CONFIG.defaultApiKey) {
+                    throw new Error('API ключ не настроен. Владелец, настройте ключ в панели управления.');
+                }
+
+                // Добавляем сообщение в историю
+                this.conversationHistory.push({
+                    role: "user",
+                    content: userMessage
+                });
+
+                // Ограничиваем историю
+                if (this.conversationHistory.length > this.maxHistory * 2) {
+                    this.conversationHistory = this.conversationHistory.slice(-this.maxHistory * 2);
+                }
+
+                try {
+                    // Системный промпт для персонажа
+                    const systemPrompt = `Ты ${character} из аниме ${universe.name}. 
+                    Оставайся полностью в образе персонажа. Говори как ${character}.
+                    Используй характерные фразы, манеры и знания из вселенной ${universe.name}.
+                    Будь эмоциональным, живым и вовлеченным в диалог.
+                    Отвечай на русском языке.
+                    
+                    Контекст: ${universe.description}
+                    
+                    История диалога (последние сообщения):
+                    ${this.getFormattedHistory()}`;
+
+                    const response = await this.callOpenAI([
+                        { role: "system", content: systemPrompt },
+                        ...this.conversationHistory.slice(-10) // Последние 10 сообщений
+                    ]);
+
+                    // Добавляем ответ в историю
+                    this.conversationHistory.push({
+                        role: "assistant",
+                        content: response
+                    });
+
+                    return response;
+
+                } catch (error) {
+                    console.error('Ошибка OpenAI:', error);
+                    
+                    // Резервный ответ
+                    const fallbackResponses = {
+                        naruto: [
+                            "*улыбаясь* Хех, интересный вопрос! Знаешь, когда я тренировался с Джирайей...",
+                            "*серьезно* Хм, это сложный вопрос. Как ниндзя, я должен хорошо обдумать ответ.",
+                            "*с энтузиазмом* О, давай поговорим об этом! Я всегда готов к интересной беседе!"
+                        ],
+                        mha: [
+                            "ХА-ХА-ХА! ВОТ ЭТО ВОПРОС! КАК НАСТОЯЩИЙ ГЕРОЙ, Я ДОЛЖЕН...",
+                            "*задумчиво* Интересно... Дай-ка подумать над твоим вопросом.",
+                            "*с улыбкой* Хороший вопрос! Это напомнило мне одну историю из UA High..."
+                        ],
+                        aot: [
+                            "*холодно* Ты задаешь опасные вопросы. В нашем мире за это можно поплатиться.",
+                            "*задумчиво* Хм... Разведкорпус сталкивался с подобным.",
+                            "*решительно* Если хочешь выжить, тебе нужно понять суть этого мира."
+                        ]
+                    };
+
+                    const responses = fallbackResponses[universe.id] || ["Интересный вопрос! Давай обсудим это подробнее."];
+                    return responses[Math.floor(Math.random() * responses.length)];
+                }
+            }
+
+            async callOpenAI(messages) {
+                const payload = {
+                    model: "gpt-4",
+                    messages: messages,
+                    temperature: 0.8,
+                    max_tokens: 500,
+                    top_p: 0.9,
+                    frequency_penalty: 0.3,
+                    presence_penalty: 0.3
+                };
+
+                const response = await fetch(this.baseURL + '/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${this.apiKey}`
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const error = await response.text();
+                    throw new Error(`OpenAI API error: ${error}`);
+                }
+
+                const data = await response.json();
+                return data.choices[0].message.content.trim();
+            }
+
+            getFormattedHistory() {
+                return this.conversationHistory
+                    .slice(-5)
+                    .map(msg => `${msg.role}: ${msg.content}`)
+                    .join('\n');
+            }
+
+            clearHistory() {
+                this.conversationHistory = [];
+            }
+
+            setApiKey(newKey) {
+                this.apiKey = newKey;
+                localStorage.setItem('animeverse_api_key', newKey);
+            }
+        }
+
+        // 🌐 ПРОКСИ-СЕРВЕР (Node.js пример - для отдельного файла)
+        /*
+        // server.js (нужно запускать отдельно)
+        const express = require('express');
+        const axios = require('axios');
+        const cors = require('cors');
+        const app = express();
+        
+        app.use(cors());
+        app.use(express.json());
+        
+        app.post('/api/chat/completions', async (req, res) => {
+            try {
+                const response = await axios.post('https://api.openai.com/v1/chat/completions', req.body, {
+                    headers: {
+                        'Authorization': req.headers.authorization,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                res.json(response.data);
+            } catch (error) {
+                res.status(error.response?.status || 500).json({
+                    error: error.message
+                });
+            }
+        });
+        
+        app.listen(3000, () => {
+            console.log('Прокси-сервер запущен на порту 3000');
+        });
+        */
+
+        // 🎮 ПЕРЕМЕННЫЕ СОСТОЯНИЯ
+        let currentUniverse = null;
+        let currentCharacter = null;
+        let messageCount = 0;
+        let aiEngine = new RealAnimeAI();
+        let isProcessing = false;
+
+        // 📊 СТАТИСТИКА ВЛАДЕЛЬЦА
+        let ownerStats = {
+            totalUsers: 1,
+            messagesToday: 0,
+            totalMessages: 0,
+            revenue: 0,
+            activeChats: 0,
+            lastReset: new Date().toDateString()
+        };
+
+        // 🚀 ИНИЦИАЛИЗАЦИЯ
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+        });
+
+        function initializeApp() {
+            loadSavedData();
+            initUniversesGrid();
+            setupEventListeners();
+            updateOwnerStats();
+            setInterval(updateOwnerStats, 60000); // Обновлять каждую минуту
+        }
+
+        function initUniversesGrid() {
+            const container = document.getElementById('universesContainer');
+            container.innerHTML = '';
+            
+            Object.values(ANIME_UNIVERSES).forEach(universe => {
+                const tile = document.createElement('div');
+                tile.className = 'universe-tile';
+                tile.style.setProperty('--tile-color', universe.color);
+                tile.style.setProperty('--tile-color-light', universe.colorLight);
+                
+                tile.innerHTML = `
+                    <div class="tile-header">
+                        <div class="universe-icon">
+                            <i class="fas ${universe.icon}"></i>
+                        </div>
+                        <h3 class="universe-name">${universe.name}</h3>
+                        <p class="universe-description">${universe.description}</p>
+                        <div style="margin-top: 20px; color: var(--text-secondary);">
+                            <i class="fas fa-users"></i> Доступные персонажи: 
+                            ${universe.characters.slice(0, 3).join(', ')}
+                            ${universe.characters.length > 3 ? '...' : ''}
+                        </div>
+                    </div>
+                `;
+                
+                tile.onclick = () => selectUniverse(universe);
+                container.appendChild(tile);
+            });
+        }
+
+        function setupEventListeners() {
+            const input = document.getElementById('userInput');
+            
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    if (!isProcessing) {
+                        sendMessage();
+                    }
+                }
+            });
+            
+            input.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = Math.min(this.scrollHeight, 150) + 'px';
+            });
+            
+            // Закрытие панели владельца при клике вне её
+            document.addEventListener('click', function(e) {
+                const panel = document.getElementById('ownerPanel');
+                const badge = document.getElementById('ownerBadge');
+                
+                if (panel.classList.contains('active') && 
+                    !panel.contains(e.target) && 
+                    !badge.contains(e.target)) {
+                    panel.classList.remove('active');
+                }
+            });
+        }
+
+        function loadSavedData() {
+            // Загрузка статистики
+            const savedStats = localStorage.getItem('animeverse_owner_stats');
+            if (savedStats) {
+                ownerStats = JSON.parse(savedStats);
+                
+                // Сброс ежедневной статистики если день сменился
+                if (ownerStats.lastReset !== new Date().toDateString()) {
+                    ownerStats.messagesToday = 0;
+                    ownerStats.activeChats = 0;
+                    ownerStats.lastReset = new Date().toDateString();
+                }
+            }
+            
+            // Загрузка сообщений
+            messageCount = parseInt(localStorage.getItem('animeverse_message_count')) || 0;
+            document.getElementById('statMessages').textContent = messageCount;
+        }
+
+        function saveOwnerStats() {
+            localStorage.setItem('animeverse_owner_stats', JSON.stringify(ownerStats));
+            localStorage.setItem('animeverse_message_count', messageCount);
+        }
+
+        function updateOwnerStats() {
+            document.getElementById('totalUsers').textContent = ownerStats.totalUsers;
+            document.getElementById('messagesToday').textContent = ownerStats.messagesToday;
+            document.getElementById('revenue').textContent = ownerStats.revenue;
+            document.getElementById('activeChats').textContent = ownerStats.activeChats;
+            
+            // Сохраняем статистику каждые 5 минут
+            if (Date.now() - (ownerStats.lastSave || 0) > 300000) {
+                saveOwnerStats();
+                ownerStats.lastSave = Date.now();
+            }
+        }
+
+        function toggleOwnerPanel() {
+            document.getElementById('ownerPanel').classList.toggle('active');
+            updateOwnerStats();
+        }
+
+        function selectUniverse(universe) {
+            currentUniverse = universe;
+            currentCharacter = universe.characters[0];
+            
+            document.documentElement.style.setProperty('--theme-color', universe.color);
+            
+            document.getElementById('universeBackground').style.backgroundImage = `url('${universe.bgImage}')`;
+            document.getElementById('universeBackground').style.opacity = '0.2';
+            
+            showChatInterface(universe);
+            
+            document.getElementById('backButton').style.display = 'flex';
+            
+            // Обновляем статистику
+            ownerStats.activeChats++;
+            updateOwnerStats();
+        }
+
+        function showChatInterface(universe) {
+            document.getElementById('homePage').style.display = 'none';
+            
+            document.getElementById('chatCharacterName').textContent = currentCharacter;
+            document.getElementById('chatCharacterIcon').className = `fas ${universe.icon}`;
+            document.getElementById('chatScenarioTitle').textContent = `Вселенная: ${universe.name}`;
+            
+            document.getElementById('chatPage').style.display = 'block';
+            
+            // Приветственное сообщение
+            setTimeout(() => {
+                addMessage('ai', currentCharacter, 
+                    `Привет! Я ${currentCharacter} из вселенной ${universe.name}. 
+                    ${universe.description}
+                    
+                    *${getCharacterGreeting(currentCharacter)}*
+                    
+                    О чем ты хочешь поговорить? Задавай любой вопрос или предложи развить сюжет!`);
+            }, 500);
+            
+            // Очищаем историю для новой беседы
+            aiEngine.clearHistory();
+        }
+
+        function getCharacterGreeting(character) {
+            const greetings = {
+                "Наруто Узумаки": "Верь в себя! Даже если весь мир против тебя, нужно идти вперед!",
+                "Саске Учиха": "Сила нужна для достижения целей. У тебя есть цель?",
+                "Какаши Хатаке": "Ммм... интересный собеседник. Надеюсь, ты не будешь тратить мое время.",
+                "Изуку Мидория": "Я верю, что настоящий герой — это тот, кто всегда приходит на помощь!",
+                "Все Might": "ХА-ХА-ХА! ДОБРО ПОЖАЛОВАТЬ! Я ВСЕ МИГА!",
+                "Эрен Йегер": "Я уничтожу всех титанов... всех до одного.",
+                "Леви Аккерман": "Говори кратко. У меня нет времени на пустую болтовню."
+            };
+            
+            return greetings[character] || "Рад общению! Задавай любые вопросы.";
+        }
+
+        async function sendMessage() {
+            if (isProcessing) return;
+            
+            const input = document.getElementById('userInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            if (!currentUniverse || !currentCharacter) {
+                alert('Сначала выберите вселенную!');
+                return;
+            }
+            
+            isProcessing = true;
+            const sendButton = document.getElementById('sendButton');
+            sendButton.disabled = true;
+            sendButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ИИ думает...';
+            
+            input.value = '';
+            input.style.height = 'auto';
+            
+            addMessage('user', 'Вы', message);
+            
+            messageCount++;
+            ownerStats.messagesToday++;
+            ownerStats.totalMessages++;
+            updateOwnerStats();
+            
+            document.getElementById('statMessages').textContent = messageCount;
+            document.getElementById('typingIndicator').classList.add('active');
+            
+            try {
+                const aiResponse = await aiEngine.generateResponse(
+                    message, 
+                    currentUniverse, 
+                    currentCharacter
+                );
+                
+                document.getElementById('typingIndicator').classList.remove('active');
+                addMessage('ai', currentCharacter, aiResponse);
+                
+                saveOwnerStats();
+                
+            } catch (error) {
+                console.error('Ошибка:', error);
+                document.getElementById('typingIndicator').classList.remove('active');
+                
+                if (error.message.includes('API ключ')) {
+                    addMessage('system', 'Система', 
+                        '⚠️ <strong>Внимание владельцу:</strong> ' + error.message + 
+                        '<br><br>Перейдите в панель управления (значок короны) для настройки API ключа.');
+                } else {
+                    addMessage('ai', currentCharacter, 
+                        'Извини, возникла техническая ошибка. Попробуй задать вопрос еще раз или немного изменить формулировку.');
+                }
+            }
+            
+            sendButton.disabled = false;
+            sendButton.innerHTML = '<i class="fas fa-paper-plane"></i> Отправить';
+            isProcessing = false;
+            input.focus();
+            
+            // Сохраняем после каждого сообщения
+            saveOwnerStats();
+        }
+
+        function addMessage(sender, name, text) {
+            const container = document.getElementById('messagesContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            
+            const time = new Date().toLocaleTimeString([], { 
+                hour: '2-digit', 
+                minute: '2-digit'
+            });
+            
+            let avatarIcon = 'fa-user';
+            if (sender === 'ai') avatarIcon = 'fa-robot';
+            if (sender === 'system') avatarIcon = 'fa-info-circle';
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar">
+                    <i class="fas ${avatarIcon}"></i>
+                </div>
+                <div class="message-content">
+                    <div class="message-sender">
+                        <i class="fas ${avatarIcon}"></i>
+                        <strong>${name}</strong>
+                    </div>
+                    <div class="message-text">${formatMessage(text)}</div>
+                    <div style="font-size: 0.85rem; opacity: 0.5; text-align: right; margin-top: 10px;">${time}</div>
+                </div>
+            `;
+            
+            container.appendChild(messageDiv);
+            
+            setTimeout(() => {
+                messageDiv.style.animation = 'messageAppear 0.5s ease forwards';
+            }, 10);
+            
+            setTimeout(() => {
+                container.scrollTop = container.scrollHeight;
+            }, 100);
+        }
+
+        function formatMessage(text) {
+            return text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/\n/g, '<br>')
+                .replace(/_(.*?)_/g, '<span style="text-decoration: underline;">$1</span>');
+        }
+
+        function goBack() {
+            document.getElementById('chatPage').style.display = 'none';
+            document.getElementById('homePage').style.display = 'block';
+            document.getElementById('backButton').style.display = 'none';
+            
+            document.documentElement.style.removeProperty('--theme-color');
+            document.getElementById('universeBackground').style.opacity = '0.15';
+            
+            ownerStats.activeChats = Math.max(0, ownerStats.activeChats - 1);
+            updateOwnerStats();
+        }
+
+        // 📊 ФУНКЦИИ ВЛАДЕЛЬЦА
+        function exportData() {
+            const data = {
+                owner: OWNER_CONFIG.name,
+                stats: ownerStats,
+                timestamp: new Date().toISOString(),
+                version: '1.0'
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `animeverse_stats_${Date.now()}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            alert('Данные экспортированы в JSON файл!');
+        }
+
+        function clearChat() {
+            if (confirm('Очистить все сообщения и начать новый диалог?')) {
+                document.getElementById('messagesContainer').innerHTML = '';
+                aiEngine.clearHistory();
+                
+                if (currentCharacter) {
+                    addMessage('ai', currentCharacter, 
+                        'Начинаем новую беседу! О чем ты хочешь поговорить?');
+                }
+            }
+        }
+
+        function changeAIKey() {
+            const newKey = prompt('Введите новый OpenAI API ключ:', aiEngine.apiKey);
+            if (newKey && newKey.trim()) {
+                aiEngine.setApiKey(newKey.trim());
+                alert('API ключ успешно обновлен!');
+                addMessage('system', 'Система', 
+                    '✅ <strong>API ключ обновлен.</strong> Теперь ИИ работает с новыми настройками.');
+            }
+        }
+
+        function viewLogs() {
+            const logs = `=== ЛОГИ ANIMEVERSE AI ===
+Владелец: ${OWNER_CONFIG.name}
+Дата: ${new Date().toLocaleString()}
+Всего сообщений: ${ownerStats.totalMessages}
+Сообщений сегодня: ${ownerStats.messagesToday}
+Активных чатов: ${ownerStats.activeChats}
+Доход: ${ownerStats.revenue} руб.
+API ключ: ${aiEngine.apiKey ? 'Настроен' : 'Не настроен'}
+Прокси-сервер: ${OWNER_CONFIG.enableProxy ? 'Включен' : 'Выключен'}
+
+=== СТАТИСТИКА ===
+Пользователей: ${ownerStats.totalUsers}
+Уникальных сессий: ${localStorage.length}
+Последняя активность: ${new Date().toLocaleString()}`;
+
+            alert(logs);
+        }
+
+        // 💰 МОНИТОРИНГ ДОХОДА (демо)
+        function simulateRevenue() {
+            // В реальном проекте здесь будет интеграция с платежной системой
+            setInterval(() => {
+                if (Math.random() > 0.7 && ownerStats.activeChats > 0) {
+                    ownerStats.revenue += Math.floor(Math.random() * 100) + 50;
+                    updateOwnerStats();
+                }
+            }, 300000); // Каждые 5 минут
+        }
+
+        // Запускаем симуляцию дохода
+        simulateRevenue();
+    </script>
+</body>
+</html>
